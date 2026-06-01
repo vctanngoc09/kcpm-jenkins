@@ -48,7 +48,7 @@ pipeline {
                 echo '🚀 Bắt đầu chạy Newman Test và kiểm tra lỗi...'
                 dir('backend/test') {
                     // Bạn nhớ đổi tên thư mục trùng với tên Folder trong Postman nha
-                    sh 'node jira_automation.js "Ten-Thu-Muc-Can-Test"'
+                    sh 'node jira_automation.js'
                 }
             }
         }
