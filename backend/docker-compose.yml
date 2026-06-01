@@ -419,6 +419,22 @@ services:
     networks:
       - evnet
 
+
+  # ⚙️ JENKINS CI/CD SERVICE
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: jenkins_server
+    user: root # Bắt buộc chạy quyền root để Jenkins có thể tự động cài các tool bên trong
+    ports:
+      - "8090:8080" # Bẻ cổng ra ngoài là 8090 để không đụng với gateway
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    networks:
+      - evnet
+    restart: unless-stopped
+
+
 # 🌐 Shared Network
 networks:
   evnet:
@@ -431,3 +447,4 @@ volumes:
   nifi_database:
   nifi_provenance:
   nifi_state:
+  jenkins_home:
