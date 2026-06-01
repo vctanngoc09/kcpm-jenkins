@@ -7,7 +7,6 @@ pipeline {
     
     environment {
         JIRA_API_TOKEN          = credentials('JIRA_API_TOKEN')
-        POSTMAN_API_KEY         = credentials('POSTMAN_API_KEY')
         
         JIRA_DOMAIN             = 'caongoctanvo.atlassian.net'
         JIRA_EMAIL              = 'caongoctanvo@gmail.com'
