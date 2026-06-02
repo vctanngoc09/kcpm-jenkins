@@ -21,10 +21,8 @@ pipeline {
     
     // THÊM ĐOẠN NÀY ĐỂ HẸN LỊCH CHẠY TỰ ĐỘNG
     triggers {
-        // Cú pháp Cron: Phút(0-59) Giờ(0-23) Ngày(1-31) Tháng(1-12) Thứ(0-7, 0 và 7 là Chủ Nhật)
-        // 0 0 * * 3,0 nghĩa là: 0h 0 phút, ngày nào cũng được, tháng nào cũng được, rơi vào Thứ 4 (3) và Chủ Nhật (0)
-        cron('0 12 * * 2')
-        // pollSCM('H/2 * * * *')
+        cron('10 5 * * 2')
+        pollSCM('H/2 * * * *')
     }
     
     stages {
