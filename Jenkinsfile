@@ -8,15 +8,15 @@ pipeline {
     environment {
         JIRA_API_TOKEN          = credentials('JIRA_API_TOKEN')
         
-        JIRA_DOMAIN             = 'caongoctanvo.atlassian.net'
-        JIRA_EMAIL              = 'caongoctanvo@gmail.com'
-        JIRA_PROJECT_KEY        = 'TAP'
-        JIRA_SERVICE_ISSUE_TYPE = 'Epic'
-        JIRA_AUTOMATION_ISSUE_TYPE = 'Task'
-        JIRA_BUG_ISSUE_TYPE     = 'Subbug'
+        JIRA_DOMAIN             =caongoctanvo.atlassian.net
+        JIRA_EMAIL              = caongoctanvo@gmail.com
+        JIRA_PROJECT_KEY        = TAP
+        JIRA_SERVICE_ISSUE_TYPE = Epic
+        JIRA_AUTOMATION_ISSUE_TYPE =Task
+        JIRA_BUG_ISSUE_TYPE     =Subbug
         
-        POSTMAN_COLLECTION_ID   = '55110231-c5612bea-0c70-4885-8563-a2a269fd1756' 
-        API_BASE_URL            = 'http://gateway:8080/api' 
+        POSTMAN_COLLECTION_ID   =55110231-c5612bea-0c70-4885-8563-a2a269fd1756
+        API_BASE_URL            = http://gateway:8080/api
     }
     
     // THÊM ĐOẠN NÀY ĐỂ HẸN LỊCH CHẠY TỰ ĐỘNG
@@ -38,7 +38,7 @@ pipeline {
             steps {
                 echo '📦 Đang cài đặt các thư viện Node.js cần thiết...'
                 dir('backend/test') {
-                    sh 'npm install newman dotenv axios crypto'
+                    sh 'npm install newman dotenv axios'
                 }
             }
         }
