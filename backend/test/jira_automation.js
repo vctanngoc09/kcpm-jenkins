@@ -450,4 +450,4 @@ async function main() {
   await startSyncBugsToJira();
 }
 
-main();
+main(); 
