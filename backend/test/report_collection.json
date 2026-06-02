@@ -3092,14 +3092,7 @@
                   "listen": "test",
                   "script": {
                     "exec": [
-                      "pm.test(\"Status code is 200\", function () {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "});\r",
-                      "\r",
-                      "const ma = pm.variables.get(\"maTram_createflow\")\r",
-                      "pm.test(\"Verrify reponse hasn't maTram that is created before\", function () {\r",
-                      "    pm.expect(pm.response.text()).to.not.include(ma);\r",
-                      "});"
+                      "pm.test(\"Status code is 404\", function () { pm.response.to.have.status(404); });"
                     ],
                     "type": "text/javascript",
                     "packages": {},
@@ -3134,9 +3127,9 @@
                   "raw": ""
                 },
                 "url": {
-                  "raw": "{{url}}/station-service/tram",
+                  "raw": "{{url}}/station-service/tram/{{maTram_createflow}}",
                   "host": ["{{url}}"],
-                  "path": ["station-service", "tram"]
+                  "path": ["station-service", "tram", "{{maTram_createflow}}"]
                 }
               },
               "response": []
@@ -11307,6 +11300,78 @@
     },
     {
       "key": "dataVehicle_bienSo_created",
+      "value": ""
+    },
+    {
+      "key": "dataloaiXe_createflow",
+      "value": ""
+    },
+    {
+      "key": "datamaTaiXe_createflow",
+      "value": ""
+    },
+    {
+      "key": "random_vin_update",
+      "value": ""
+    },
+    {
+      "key": "random_bienSo_update",
+      "value": ""
+    },
+    {
+      "key": "dataloaiXe_updateflow",
+      "value": ""
+    },
+    {
+      "key": "maPhuongTien",
+      "value": ""
+    },
+    {
+      "key": "createdVehicleVin",
+      "value": ""
+    },
+    {
+      "key": "createdVehicleBienSo",
+      "value": ""
+    },
+    {
+      "key": "createdVehicleLoaiXe",
+      "value": ""
+    },
+    {
+      "key": "createdVehicleMaTaiXe",
+      "value": ""
+    },
+    {
+      "key": "dataVehicle_vin_updated",
+      "value": ""
+    },
+    {
+      "key": "dataVehicle_bienSo_updated",
+      "value": ""
+    },
+    {
+      "key": "dataVehicle_loaiXe_updated",
+      "value": ""
+    },
+    {
+      "key": "dataVehicle_vin_createflow_2",
+      "value": ""
+    },
+    {
+      "key": "dataVehicle_bienSo_createflow_2",
+      "value": ""
+    },
+    {
+      "key": "dataVehicle_loaiXe_createflow_2",
+      "value": ""
+    },
+    {
+      "key": "dataVehicle_maTaiXe_createflow_2",
+      "value": ""
+    },
+    {
+      "key": "dataVehicle_maPin_createflow_2",
       "value": ""
     }
   ]
