@@ -951,7 +951,7 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\r\n  \"hoTen\": \"Nguyễn Văn A\",\r\n  \"email\": \"{{email}}\",\r\n  \"soDienThoai\": \"{{soDienThoai}}\",\r\n  \"gioiTinh\": \"Nam\",\r\n  \"matKhau\": \"123456\",\r\n  \"ngaySinh\": \"2015-05-20\",\r\n  \"bangLaiXe\": \"B2\"\r\n}",
+                      "raw": "{\r\n    \"hoTen\": \"Nguyễn Văn A\",\r\n    \"email\": \"{{dataDriver_email_unique}}\",\r\n    \"soDienThoai\": \"{{dataDriver_sdt_unique}}\",\r\n    \"gioiTinh\": \"Nam\",\r\n    \"matKhau\": \"123456\",\r\n    \"ngaySinh\": \"2015-05-20\",\r\n    \"bangLaiXe\": \"B2\"\r\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -2435,6 +2435,638 @@
                   }
                 }
               ]
+            },
+            {
+              "name": "Validation Update Driver",
+              "item": [
+                {
+                  "name": "Register Driver - Success 2",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "\r",
+                          "var jsonData = pm.response.json();\r",
+                          "if (jsonData.taiXeId) {\r",
+                          "     pm.environment.set(\"maTaiXe2\", jsonData.taiXeId);\r",
+                          "}\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"hoTen\": \"Nguyễn Văn B\",\r\n  \"email\": \"xyz3456@gmail.com\",\r\n  \"soDienThoai\": \"0999999999\",\r\n  \"gioiTinh\": \"Nữ\",\r\n  \"matKhau\": \"123456\",\r\n  \"ngaySinh\": \"2000-05-20\",\r\n  \"bangLaiXe\": \"B2\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/user-service/auth/register-tai-xe",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "auth", "register-tai-xe"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Register Driver - Success",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "\r",
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.be.status(200);\r",
+                          "});\r",
+                          "var jsonData = pm.response.json();\r",
+                          "pm.test(\"Kiểm tra nội dung thông báo thành công\", function () {\r",
+                          "    pm.expect(jsonData.message).to.eql(\"Đăng ký tài xế thành công\");\r",
+                          "});\r",
+                          "var emailDaGui = pm.collectionVariables.get(\"dataDriver_email_createflow\");\r",
+                          "pm.test(\"Email trả về khớp với email đã gửi\", function () {\r",
+                          "    pm.expect(jsonData).to.have.property('email'); \r",
+                          "    pm.expect(jsonData.email).to.eql(emailDaGui);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Email không được để trống\", function () {\r",
+                          "    pm.expect(jsonData.email).to.not.be.null;\r",
+                          "    pm.expect(jsonData.email).to.not.be.undefined;\r",
+                          "    pm.expect(jsonData.email).to.not.be.empty;\r",
+                          "});\r",
+                          "if (jsonData.taiXeId) {\r",
+                          "     pm.environment.set(\"maTaiXe\", jsonData.taiXeId);\r",
+                          "}\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"hoTen\": \"{{dataDriver_hoTen_createflow}}\",\r\n  \"email\": \"{{dataDriver_email_createflow}}\",\r\n  \"soDienThoai\": \"{{dataDriver_soDienThoai_createflow}}\",\r\n  \"gioiTinh\": \"{{dataDriver_gioiTinh_createflow}}\",\r\n  \"matKhau\": \"{{dataDriver_matKhau_createflow}}\",\r\n  \"ngaySinh\": \"{{dataDriver_ngaySinh_createflow}}\",\r\n  \"bangLaiXe\": \"{{dataDriver_bangLaiXe_createflow}}\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/user-service/auth/register-tai-xe",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "auth", "register-tai-xe"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Login Driver - Success",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "// 1. Kiểm tra Status Code\r",
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.be.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "// 2. Parse dữ liệu JSON\r",
+                          "var jsonData = pm.response.json();\r",
+                          "\r",
+                          "// 3. Kiểm tra thông báo (Nếu API của bạn có field 'message' khi login thành công)\r",
+                          "// Lưu ý: Nếu API không trả về field message khi login thành công, bạn có thể xóa dòng này\r",
+                          "pm.test(\"Thông báo đăng nhập thành công\", function () {\r",
+                          "    // Sửa lại chuỗi \"Đăng nhập thành công\" cho khớp với thực tế API của bạn\r",
+                          "    pm.expect(jsonData.message).to.eql(\"Đăng nhập thành công\"); \r",
+                          "});\r",
+                          "\r",
+                          "// 4. Kiểm tra sự tồn tại của Token và Role\r",
+                          "pm.test(\"Có trả về Token và Role TAIXE\", function () {\r",
+                          "    pm.expect(jsonData).to.have.property('token');\r",
+                          "    pm.expect(jsonData.token).to.not.be.empty;\r",
+                          "    pm.expect(jsonData.role).to.eql(\"TAIXE\");\r",
+                          "});\r",
+                          "\r",
+                          "// 5. Kiểm tra thông tin cá nhân (Email và Số điện thoại) khớp với dữ liệu gửi đi\r",
+                          "var sdtDaGui = pm.collectionVariables.get(\"dataDriver_soDienThoai_createflow\");\r",
+                          "var emailDaGui = pm.collectionVariables.get(\"dataDriver_email_createflow\");\r",
+                          "\r",
+                          "pm.test(\"Thông tin cá nhân khớp\", function () {\r",
+                          "    pm.expect(jsonData.soDienThoai).to.eql(sdtDaGui);\r",
+                          "    pm.expect(jsonData.email).to.eql(emailDaGui);\r",
+                          "});\r",
+                          "\r",
+                          "// 6. LƯU THÔNG TIN ĐỂ CÁC REQUEST SAU SỬ DỤNG\r",
+                          "if (jsonData.token) {\r",
+                          "     pm.environment.set(\"DRIVER_TOKEN\", jsonData.token);\r",
+                          "}\r",
+                          "if (jsonData.userId) {\r",
+                          "     pm.environment.set(\"maNguoiDungId\", jsonData.userId);\r",
+                          "}\r",
+                          "console.log(\"Dữ liệu trả về từ API:\", jsonData);\r",
+                          "console.log(\"Đã lưu token và userId thành công!\",jsonData.userId);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n \"soDienThoai\": \"{{dataDriver_soDienThoai_createflow}}\",\r\n  \"matKhau\": \"{{dataDriver_matKhau_createflow}}\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/user-service/auth/login",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "auth", "login"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Driver -  Duplicate Email Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 409\", function () {\r",
+                          "    pm.response.to.have.status(409);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Lỗi email đã tồn tại\", function () {\r",
+                          "    const msg = pm.response.text().toLowerCase();\r",
+                          "\r",
+                          "    pm.expect(msg).to.include(\"email\");\r",
+                          "    pm.expect(msg).to.include(\"tồn tại\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"hoTen\": \"Nguyễn Văn B\",\r\n  \"email\": \"xyz3456@gmail.com\",\r\n  \"soDienThoai\": \"0329628740\",\r\n  \"gioiTinh\": \"Nữ\",\r\n  \"matKhau\": \"64321\",\r\n  \"ngaySinh\": \"2000-05-20\",\r\n  \"bangLaiXe\": \"B2\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/user-service/taixe/{{maTaiXe}}",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "taixe", "{{maTaiXe}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Driver - Duplicate Phone Number",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 409\", function () {\r",
+                          "    pm.response.to.have.status(409);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Lỗi số điện thoại đã tồn tại\", function () {\r",
+                          "    const msg = pm.response.text().toLowerCase();\r",
+                          "\r",
+                          "    pm.expect(msg).to.include(\"số điện thoại\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"hoTen\": \"Nguyễn Văn B\",\r\n  \"email\": \"xyz890@gmail.com\",\r\n  \"soDienThoai\": \"0999999999\",\r\n  \"gioiTinh\": \"Nữ\",\r\n  \"matKhau\": \"64321\",\r\n  \"ngaySinh\": \"2000-05-20\",\r\n  \"bangLaiXe\": \"B2\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/user-service/taixe/{{maTaiXe}}",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "taixe", "{{maTaiXe}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Driver - Invalid Birth Date Format",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});pm.test(\"Lỗi sai định dạng ngày sinh\", function () {\r",
+                          "    const msg = pm.response.text().toLowerCase();\r",
+                          "\r",
+                          "    pm.expect(msg).to.include(\"ngày\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"hoTen\": \"Nguyễn Văn B\",\r\n  \"email\": \"xyz890@gmail.com\",\r\n  \"soDienThoai\": \"0999999333\",\r\n  \"gioiTinh\": \"Nữ\",\r\n  \"matKhau\": \"64321\",\r\n  \"ngaySinh\": \"20/05/2000\",\r\n  \"bangLaiXe\": \"B2\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/user-service/taixe/{{maTaiXe}}",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "taixe", "{{maTaiXe}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Driver - Underage Driver",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Lỗi tài xế chưa đủ 18 tuổi\", function () {\r",
+                          "    const msg = pm.response.text().toLowerCase();\r",
+                          "\r",
+                          "    pm.expect(msg).to.include(\"18\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"hoTen\": \"Nguyễn Văn B\",\r\n  \"email\": \"xyz890@gmail.com\",\r\n  \"soDienThoai\": \"0999999333\",\r\n  \"gioiTinh\": \"Nữ\",\r\n  \"matKhau\": \"64321\",\r\n  \"ngaySinh\": \"2010-05-20\",\r\n  \"bangLaiXe\": \"B2\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/user-service/taixe/{{maTaiXe}}",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "taixe", "{{maTaiXe}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Driver - Invalid Email Format",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "\r",
+                          "\r",
+                          "pm.test(\"Thông báo email không đúng định dạng\", function () {\r",
+                          "    const body = pm.response.json();\r",
+                          "\r",
+                          "    pm.expect(body.error).to.eql(\"Email không đúng định dạng\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"hoTen\": \"Nguyễn Văn B\",\r\n  \"email\": \"xyz890gmail.com\",\r\n  \"soDienThoai\": \"0999999333\",\r\n  \"gioiTinh\": \"Nữ\",\r\n  \"matKhau\": \"64321\",\r\n  \"ngaySinh\": \"2000-05-20\",\r\n  \"bangLaiXe\": \"B2\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/user-service/taixe/{{maTaiXe}}",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "taixe", "{{maTaiXe}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Driver - Invalid Phone Number Format",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Lỗi số điện thoại không hợp lệ\", function () {\r",
+                          "    const body = pm.response.json();\r",
+                          "\r",
+                          "    pm.expect(body.error).to.eql(\"Số điện thoại không hợp lệ\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"hoTen\": \"Nguyễn Văn B\",\r\n  \"email\": \"xyz890@gmail.com\",\r\n  \"soDienThoai\": \"abc123456\",\r\n  \"gioiTinh\": \"Nữ\",\r\n  \"matKhau\": \"64321\",\r\n  \"ngaySinh\": \"2000-05-20\",\r\n  \"bangLaiXe\": \"B2\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/user-service/taixe/{{maTaiXe}}",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "taixe", "{{maTaiXe}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Driver - Success",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "// 1. Kiểm tra Status Code (Chấp nhận 200 hoặc 204)\r",
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "var responseText = pm.response.text();\r",
+                          "\r",
+                          "// 3. Kiểm tra xem văn bản có chứa thông báo thành công không\r",
+                          "pm.test(\"Kiểm tra thông báo xóa thành công\", function () {\r",
+                          "    pm.expect(responseText).to.include(\"Xóa tài xế thành công\");\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{DRIVER_TOKEN}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{url}}/user-service/taixe/{{maTaiXe}}",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "taixe", "{{maTaiXe}}"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Driver - Success 2",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "// 1. Kiểm tra Status Code (Chấp nhận 200 hoặc 204)\r",
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "var responseText = pm.response.text();\r",
+                          "\r",
+                          "// 3. Kiểm tra xem văn bản có chứa thông báo thành công không\r",
+                          "pm.test(\"Kiểm tra thông báo xóa thành công\", function () {\r",
+                          "    pm.expect(responseText).to.include(\"Xóa tài xế thành công\");\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{DRIVER_TOKEN}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{url}}/user-service/taixe/{{maTaiXe2}}",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "taixe", "{{maTaiXe2}}"]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "auth": {
+                "type": "bearer",
+                "bearer": [
+                  {
+                    "key": "token",
+                    "value": "{{DRIVER_TOKEN}}",
+                    "type": "string"
+                  }
+                ]
+              },
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      "// Thiết lập dữ liệu Driver cho flow\r",
+                      "pm.collectionVariables.set(\"dataDriver_hoTen_createflow\", \"Nguyễn Văn A\");\r",
+                      "pm.collectionVariables.set(\"dataDriver_email_createflow\", \"xyz123@gmail.com\"); \r",
+                      "pm.collectionVariables.set(\"dataDriver_soDienThoai_createflow\", \"0329626781\");\r",
+                      "pm.collectionVariables.set(\"dataDriver_gioiTinh_createflow\", \"Nam\");\r",
+                      "pm.collectionVariables.set(\"dataDriver_matKhau_createflow\", \"123456\");\r",
+                      "pm.collectionVariables.set(\"dataDriver_ngaySinh_createflow\", \"1998-05-20\");\r",
+                      "pm.collectionVariables.set(\"dataDriver_bangLaiXe_createflow\", \"B2\");\r",
+                      "\r",
+                      "\r",
+                      "\r",
+                      ""
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [""]
+                  }
+                }
+              ]
             }
           ],
           "event": [
@@ -2455,6 +3087,587 @@
                 "requests": {},
                 "exec": [""]
               }
+            }
+          ]
+        },
+        {
+          "name": "Employee Success Flow",
+          "item": [
+            {
+              "name": "Register - Success",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"hoTen\": \"{{dataDriver_hoTen_createflow}}\",\r\n  \"email\": \"{{dataDriver_email_createflow}}\",\r\n  \"soDienThoai\": \"{{dataDriver_soDienThoai_createflow}}\",\r\n  \"gioiTinh\": \"{{dataDriver_gioiTinh_createflow}}\",\r\n  \"matKhau\": \"{{dataDriver_matKhau_createflow}}\",\r\n  \"ngaySinh\": \"{{dataDriver_ngaySinh_createflow}}\",\r\n  \"bangLaiXe\": \"{{dataDriver_bangLaiXe_createflow}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/user-service/auth/register-tai-xe",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "auth", "register-tai-xe"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Login - Success",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [""],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n \"soDienThoai\": \"{{dataDriver_soDienThoai_createflow}}\",\r\n  \"matKhau\": \"{{dataDriver_matKhau_createflow}}\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/user-service/auth/login",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Employee - Success",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "// Lưu mã nhân viên\r",
+                      "pm.collectionVariables.set(\r",
+                      "    \"maNhanVien\",\r",
+                      "    res.maNhanVien\r",
+                      ");\r",
+                      "\r",
+                      "pm.test(\"Employee created successfully\", function () {\r",
+                      "    pm.expect(res.nguoiDung.hoTen)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_hoTen_createflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.email)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_email_createflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.soDienThoai)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_soDienThoai_createflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.bangCap)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_bangCap_createflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.kinhNghiem)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_kinhNghiem_createflow\"));\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"hoTen\": \"{{dataEmployee_hoTen_createflow}}\",\r\n  \"email\": \"{{dataEmployee_email_createflow}}\",\r\n  \"soDienThoai\": \"{{dataEmployee_soDienThoai_createflow}}\",\r\n  \"gioiTinh\": \"{{dataEmployee_gioiTinh_createflow}}\",\r\n  \"matKhau\": \"{{dataEmployee_matKhau_createflow}}\",\r\n  \"ngaySinh\": \"{{dataEmployee_ngaySinh_createflow}}\",\r\n  \"bangCap\": \"{{dataEmployee_bangCap_createflow}}\",\r\n  \"kinhNghiem\": \"{{dataEmployee_kinhNghiem_createflow}}\",\r\n  \"maTram\": {{dataEmployee_maTram_createflow}}\r\n}"
+                },
+                "url": {
+                  "raw": "{{url}}/user-service/nhanvien",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "nhanvien"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Employee By Id - Success",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Get employee successfully\", function () {\r",
+                      "    pm.expect(res.maNhanVien)\r",
+                      "        .to.eql(Number(pm.collectionVariables.get(\"maNhanVien\")));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.hoTen)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_hoTen_createflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.email)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_email_createflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.soDienThoai)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_soDienThoai_createflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.bangCap)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_bangCap_createflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.kinhNghiem)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_kinhNghiem_createflow\"));\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/user-service/nhanvien/{{maNhanVien}}",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "nhanvien", "{{maNhanVien}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Driver - Success",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Update employee successfully\", function () {\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.hoTen)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_hoTen_updateflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.email)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_email_updateflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.soDienThoai)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_soDienThoai_updateflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.bangCap)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_bangCap_updateflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.kinhNghiem)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_kinhNghiem_updateflow\"));\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"hoTen\": \"{{dataEmployee_hoTen_updateflow}}\",\r\n  \"email\": \"{{dataEmployee_email_updateflow}}\",\r\n  \"soDienThoai\": \"{{dataEmployee_soDienThoai_updateflow}}\",\r\n  \"gioiTinh\": \"{{dataEmployee_gioiTinh_updateflow}}\",\r\n  \"matKhau\": \"{{dataEmployee_matKhau_updateflow}}\",\r\n  \"ngaySinh\": \"{{dataEmployee_ngaySinh_updateflow}}\",\r\n  \"bangCap\": \"{{dataEmployee_bangCap_updateflow}}\",\r\n  \"kinhNghiem\": \"{{dataEmployee_kinhNghiem_updateflow}}\",\r\n  \"maTram\": {{dataEmployee_maTram_updateflow}}\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{url}}/user-service/nhanvien/{{maNhanVien}}",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "nhanvien", "{{maNhanVien}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Employee By Id After Update - Success",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Updated employee data is correct\", function () {\r",
+                      "\r",
+                      "    pm.expect(res.maNhanVien)\r",
+                      "        .to.eql(Number(pm.collectionVariables.get(\"maNhanVien\")));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.hoTen)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_hoTen_updateflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.email)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_email_updateflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.soDienThoai)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_soDienThoai_updateflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.nguoiDung.gioiTinh)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_gioiTinh_updateflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.bangCap)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_bangCap_updateflow\"));\r",
+                      "\r",
+                      "    pm.expect(res.kinhNghiem)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_kinhNghiem_updateflow\"));\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/user-service/nhanvien/{{maNhanVien}}",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "nhanvien", "{{maNhanVien}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Employee - Success",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "const res = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Response is array\", function () {\r",
+                      "    pm.expect(res).to.be.an(\"array\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Employee exists in list\", function () {\r",
+                      "\r",
+                      "    const employee = res.find(\r",
+                      "        e => e.maNhanVien === Number(pm.collectionVariables.get(\"maNhanVien\"))\r",
+                      "    );\r",
+                      "\r",
+                      "    pm.expect(employee).to.not.be.undefined;\r",
+                      "\r",
+                      "    pm.expect(employee.nguoiDung.email)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_email_updateflow\"));\r",
+                      "\r",
+                      "    pm.expect(employee.nguoiDung.soDienThoai)\r",
+                      "        .to.eql(pm.collectionVariables.get(\"dataEmployee_soDienThoai_updateflow\"));\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/user-service/nhanvien",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "nhanvien"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Employee - Success",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Delete employee successfully\", function () {\r",
+                      "    pm.expect(pm.response.text())\r",
+                      "        .to.include(\"Xóa nhân viên thành công\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/user-service/nhanvien/{{maNhanVien}}",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "nhanvien", "{{maNhanVien}}"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "key": "token",
+                "value": "{{DRIVER_TOKEN}}",
+                "type": "string"
+              }
+            ]
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  "// Thiết lập dữ liệu Employee cho flow\r",
+                  "pm.collectionVariables.set(\"dataEmployee_hoTen_createflow\", \"Nguyễn Văn A\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_email_createflow\", \"employee01@gmail.com\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_soDienThoai_createflow\", \"0901234567\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_gioiTinh_createflow\", \"Nam\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_matKhau_createflow\", \"123456\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_ngaySinh_createflow\", \"1998-05-20\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_bangCap_createflow\", \"Đại học CNTT\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_kinhNghiem_createflow\", \"3 năm\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_maTram_createflow\", \"1\");\r",
+                  "\r",
+                  "\r",
+                  "// Dữ liệu update Employee\r",
+                  "pm.collectionVariables.set(\"dataEmployee_hoTen_updateflow\", \"Nguyễn Văn B\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_email_updateflow\", \"employee02@gmail.com\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_soDienThoai_updateflow\", \"0901239999\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_gioiTinh_updateflow\", \"Nữ\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_matKhau_updateflow\", \"654321\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_ngaySinh_updateflow\", \"1999-06-15\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_bangCap_updateflow\", \"Thạc sĩ CNTT\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_kinhNghiem_updateflow\", \"5 năm\");\r",
+                  "pm.collectionVariables.set(\"dataEmployee_maTram_updateflow\", \"2\");\r",
+                  "\r",
+                  "pm.collectionVariables.set(\"dataDriver_hoTen_createflow\", \"Nguyễn Văn A\");\r",
+                  "pm.collectionVariables.set(\"dataDriver_email_createflow\", \"xyz123@gmail.com\"); \r",
+                  "pm.collectionVariables.set(\"dataDriver_soDienThoai_createflow\", \"0329626781\");\r",
+                  "pm.collectionVariables.set(\"dataDriver_gioiTinh_createflow\", \"Nam\");\r",
+                  "pm.collectionVariables.set(\"dataDriver_matKhau_createflow\", \"123456\");\r",
+                  "pm.collectionVariables.set(\"dataDriver_ngaySinh_createflow\", \"1998-05-20\");\r",
+                  "pm.collectionVariables.set(\"dataDriver_bangLaiXe_createflow\", \"B2\");\r",
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [""]
+              }
+            }
+          ]
+        },
+        {
+          "name": "validation driver",
+          "item": [
+            {
+              "name": "Get Employee By Id - Not Found",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Thông báo không tìm thấy nhân viên\", function () {\r",
+                      "    pm.expect(pm.response.text())\r",
+                      "        .to.eql(\"Không tìm thấy nhân viên\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{url}}/user-service/nhanvien/999999",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "nhanvien", "999999"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Employee - Not Found",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Error message is correct\", function () {\r",
+                      "    pm.expect(pm.response.text())\r",
+                      "        .to.include(\"Không tìm thấy nhân viên\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/user-service/nhanvien/999999",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "nhanvien", "999999"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Employee - Not Found",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Error message is correct\", function () {\r",
+                      "    pm.expect(pm.response.text())\r",
+                      "        .to.eql(\"Không tìm thấy nhân viên\");\r",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{url}}/user-service/nhanvien/999999",
+                  "host": ["{{url}}"],
+                  "path": ["user-service", "nhanvien", "999999"]
+                }
+              },
+              "response": []
             }
           ]
         }
@@ -2793,18 +4006,20 @@
                   "listen": "prerequest",
                   "script": {
                     "exec": [
-                      "const diaChi = pm.variables.get(\"datadiaChi_createflow\")\r",
-                      "const kinhDo = pm.variables.get(\"datakinhDo_createflow\")\r",
-                      "const viDo = pm.variables.get(\"dataviDo_createflow\")\r",
-                      "const soLuongPinToiDa = pm.variables.get(\"datasoLuongPinToiDa_createflow\")\r",
-                      "const soDT = pm.variables.get(\"datasoDT_createflow\")\r",
+                      "const diaChi_expect = pm.variables.get(\"datadiaChi_createflow\")\r",
+                      "const kinhDo_expect = pm.variables.get(\"datakinhDo_createflow\")\r",
+                      "const viDo_expect = pm.variables.get(\"dataviDo_createflow\")\r",
+                      "const soLuongPinToiDa_expect = pm.variables.get(\"datasoLuongPinToiDa_createflow\")\r",
+                      "const soDT_expect = pm.variables.get(\"random_soDT\")\r",
+                      "const trangThai_expect = pm.variables.get(\"datatrangThai_createflow\")\r",
+                      "\r",
                       "\r",
                       "pm.environment.set(\"dataUpdate_tenTram\", \"Trạm Đổi Pin Quận 1 - Cập nhật\");\r",
-                      "pm.environment.set(\"dataUpdate_diaChi\", diaChi);\r",
-                      "pm.environment.set(\"dataUpdate_kinhDo\", kinhDo);\r",
-                      "pm.environment.set(\"dataUpdate_viDo\", viDo);\r",
-                      "pm.environment.set(\"dataUpdate_soLuongPinToiDa\", soLuongPinToiDa);\r",
-                      "pm.environment.set(\"dataUpdate_soDT\", soDT);\r",
+                      "pm.environment.set(\"dataUpdate_diaChi\", diaChi_expect);\r",
+                      "pm.environment.set(\"dataUpdate_kinhDo\", kinhDo_expect);\r",
+                      "pm.environment.set(\"dataUpdate_viDo\", viDo_expect);\r",
+                      "pm.environment.set(\"dataUpdate_soLuongPinToiDa\", soLuongPinToiDa_expect);\r",
+                      "pm.environment.set(\"dataUpdate_soDT\", soDT_expect);\r",
                       "pm.environment.set(\"dataUpdate_trangThai\", \"Bảo trì\");"
                     ],
                     "type": "text/javascript",
@@ -2816,18 +4031,54 @@
                   "listen": "test",
                   "script": {
                     "exec": [
-                      "pm.test(\"Status code is 200 - Update thành công\", function () {\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
                       "    pm.response.to.have.status(200);\r",
                       "});\r",
                       "\r",
-                      "const updatedData = pm.response.json();\r",
+                      "const getReponse = pm.response.json()\r",
+                      "const tenTram_reponse = getReponse.tenTram;\r",
+                      "const diaChi_reponse = getReponse.diaChi;\r",
+                      "const kinhDo_reponse = getReponse.kinhDo;\r",
+                      "const viDo_reponse = getReponse.viDo;\r",
+                      "const soLuongPinToiDa_reponse = getReponse.soLuongPinToiDa;\r",
+                      "const soDT_reponse = getReponse.soDT;\r",
+                      "const trangThai_reponse = getReponse.trangThai;\r",
                       "\r",
-                      "pm.test(\"Tên trạm đã được cập nhật mới\", function () {\r",
-                      "    pm.expect(updatedData.tenTram).to.eql(pm.environment.get(\"dataUpdate_tenTram\"));\r",
+                      "// expect expect\r",
+                      "const tenTram_expect = pm.variables.get(\"dataUpdate_tenTram\")\r",
+                      "const diaChi_expect = pm.variables.get(\"dataUpdate_diaChi\")\r",
+                      "const kinhDo_expect = pm.variables.get(\"dataUpdate_kinhDo\")\r",
+                      "const viDo_expect = pm.variables.get(\"dataUpdate_viDo\")\r",
+                      "const soLuongPinToiDa_expect = pm.variables.get(\"dataUpdate_soLuongPinToiDa\")\r",
+                      "const soDT_expect = pm.variables.get(\"dataUpdate_soDT\")\r",
+                      "const trangThai_expect = pm.variables.get(\"dataUpdate_trangThai\")\r",
+                      "\r",
+                      "pm.test(\"tenTram is correct\", function () {\r",
+                      "    pm.expect(tenTram_reponse).to.eql(tenTram_expect)\r",
                       "});\r",
                       "\r",
-                      "pm.test(\"Trạng thái trạm đã chuyển sang Bảo trì\", function () {\r",
-                      "    pm.expect(updatedData.trangThai).to.eql(pm.environment.get(\"dataUpdate_trangThai\"));\r",
+                      "pm.test(\"diaChi is correct\", function () {\r",
+                      "    pm.expect(diaChi_reponse).to.eql(diaChi_expect)\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"kinhDo is correct\", function () {\r",
+                      "    pm.expect(kinhDo_reponse).to.eql(kinhDo_expect)\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"viDo is correct\", function () {\r",
+                      "    pm.expect(viDo_reponse).to.eql(viDo_expect)\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"soLuongPinToiDa is correct\", function () {\r",
+                      "    pm.expect(soLuongPinToiDa_reponse).to.eql(soLuongPinToiDa_expect)\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"soDT is correct\", function () {\r",
+                      "    pm.expect(soDT_reponse).to.eql(soDT_expect)\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"trangThai is correct\", function () {\r",
+                      "    pm.expect(trangThai_reponse).to.eql(trangThai_expect)\r",
                       "});"
                     ],
                     "type": "text/javascript",
@@ -3235,6 +4486,96 @@
                     "body": {
                       "mode": "raw",
                       "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"{{datadiaChi_createflow}}\",\r\n  \"kinhDo\": {{datakinhDo_createflow}},\r\n  \"viDo\": {{dataviDo_createflow}},\r\n  \"soLuongPinToiDa\": {{datasoLuongPinToiDa_createflow}},\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"{{datatrangThai_createflow}}\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram",
+                      "host": ["{{url}}"],
+                      "path": ["station-service", "tram"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create Station - Empty Body",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try {\r",
+                          "    responseData = pm.response.json();\r",
+                          "} catch (e) {\r",
+                          "    responseData = null;\r",
+                          "}\r",
+                          "\r",
+                          "// 1. Kiểm tra HTTP Status Code & Content-Type\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "// 2. Validate cấu trúc JSON Schema lỗi chuẩn\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    // 3. Kiểm tra nội dung message & đường dẫn path cụ thể\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [dữ liệu đầu vào không hợp lệ]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('dữ liệu đầu vào không hợp lệ');\r",
+                          "    });\r",
+                          "    \r",
+                          "    pm.test(\"Đường dẫn API (path) phản hồi chính xác\", function () {\r",
+                          "        pm.expect(responseData.path).to.include('/api/station-service/tram');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [""],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -4246,6 +5587,345 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "Create Station - Phone < 10 Character",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [số điện thoại nhỏ hơn 10 số]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('số điện thoại nhỏ hơn 10 số');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.711834,\r\n  \"viDo\": 10.801649,\r\n  \"soLuongPinToiDa\": 5,\r\n  \"soDT\": \"{{random_soDT<10}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram",
+                      "host": ["{{url}}"],
+                      "path": ["station-service", "tram"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create Station - Phone > 11 Character",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [số điện thoại lớn hơn 10 số]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('số điện thoại lớn hơn 11 số');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.711834,\r\n  \"viDo\": 10.801649,\r\n  \"soLuongPinToiDa\": 5,\r\n  \"soDT\": \"{{random_soDT>10}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram",
+                      "host": ["{{url}}"],
+                      "path": ["station-service", "tram"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create Station - Phone Invalid Type",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [số điện thoại sai kiểu dữ liệu]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('số điện thoại sai kiểu dữ liệu');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"tenTram\": \"{{random_tenTram}}\",\r\n    \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n    \"kinhDo\": 106.711834,\r\n    \"viDo\": 10.801649,\r\n    \"soLuongPinToiDa\": 5,\r\n    \"soDT\": \"{{random_soDTInvalid}}\",\r\n    \"trangThai\": \"Bảo trì\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram",
+                      "host": ["{{url}}"],
+                      "path": ["station-service", "tram"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create Station - Status Empty",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [trạng thái rỗng]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('trạng thái rỗng');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"tenTram\": \"{{random_tenTram}}\",\r\n    \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n    \"kinhDo\": 106.711834,\r\n    \"viDo\": 10.801649,\r\n    \"soLuongPinToiDa\": 5,\r\n    \"soDT\": \"{{random_soDT}}\",\r\n    \"trangThai\": \"\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram",
+                      "host": ["{{url}}"],
+                      "path": ["station-service", "tram"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Station - Success",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200 - Xóa trạm thành công\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Tin nhắn phản hồi chính xác\", function () {\r",
+                          "    pm.expect(pm.response.text()).to.eql(\"Xóa trạm thành công!\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_createflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_createflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ],
               "event": [
@@ -4269,7 +5949,11 @@
                       "pm.environment.set(\"dataviDo_createflow\", 10.776349);\r",
                       "pm.environment.set(\"datasoLuongPinToiDa_createflow\", 20);\r",
                       "pm.environment.set(\"datasoDT_createflow\", \"0901234567\");\r",
-                      "pm.environment.set(\"datatrangThai_createflow\", \"Hoạt động\");"
+                      "pm.environment.set(\"datatrangThai_createflow\", \"Hoạt động\");\r",
+                      "\r",
+                      "pm.environment.set(\"random_soDT<10\", \"091\" + randomId);\r",
+                      "pm.environment.set(\"random_soDT>10\", \"091\" + randomId + \"569764\");\r",
+                      "pm.environment.set(\"random_soDTInvalid\", \"ABC\" + randomId);"
                     ]
                   }
                 },
@@ -4281,6 +5965,1967 @@
                     "requests": {},
                     "exec": [""]
                   }
+                }
+              ]
+            },
+            {
+              "name": "Validation Get Station",
+              "item": [
+                {
+                  "name": "Get Station By Id - Not Found",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try {\r",
+                          "    responseData = pm.response.json();\r",
+                          "} catch (e) {\r",
+                          "    responseData = null;\r",
+                          "}\r",
+                          "\r",
+                          "// 1. Kiểm tra HTTP Status Code & Content-Type\r",
+                          "pm.test(\"Status code bắt buộc phải là 404 Not Found\", function () {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "// 2. Validate cấu trúc JSON Schema lỗi chuẩn\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(404);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Not Found\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [không tìm thấy trạm]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('không tìm thấy trạm');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Đường dẫn API (path) phản hồi chính xác\", function () {\r",
+                          "        pm.expect(responseData.path).to.include('/api/station-service/tram');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/999999999",
+                      "host": ["{{url}}"],
+                      "path": ["station-service", "tram", "999999999"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get Station By Id - Invalid Id Type",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try {\r",
+                          "    responseData = pm.response.json();\r",
+                          "} catch (e) {\r",
+                          "    responseData = null;\r",
+                          "}\r",
+                          "\r",
+                          "// 1. Kiểm tra HTTP Status Code & Content-Type\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "// 2. Validate cấu trúc JSON Schema lỗi chuẩn\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [sai kiểu dữ liệu đầu vào]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('sai kiểu dữ liệu đầu vào');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Đường dẫn API (path) phản hồi chính xác\", function () {\r",
+                          "        pm.expect(responseData.path).to.include('/api/station-service/tram');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/abcbashja",
+                      "host": ["{{url}}"],
+                      "path": ["station-service", "tram", "abcbashja"]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Validation Update Station",
+              "item": [
+                {
+                  "name": "Create Station - Success",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "const getReponse = pm.response.json()\r",
+                          "const tenTram_reponse = getReponse.tenTram;\r",
+                          "const diaChi_reponse = getReponse.diaChi;\r",
+                          "const kinhDo_reponse = getReponse.kinhDo;\r",
+                          "const viDo_reponse = getReponse.viDo;\r",
+                          "const soLuongPinToiDa_reponse = getReponse.soLuongPinToiDa;\r",
+                          "const soDT_reponse = getReponse.soDT;\r",
+                          "const trangThai_reponse = getReponse.trangThai;\r",
+                          "\r",
+                          "// expect expect\r",
+                          "const tenTram_expect = pm.variables.get(\"random_tenTram\")\r",
+                          "const diaChi_expect = pm.variables.get(\"datadiaChi_createflow\")\r",
+                          "const kinhDo_expect = pm.variables.get(\"datakinhDo_createflow\")\r",
+                          "const viDo_expect = pm.variables.get(\"dataviDo_createflow\")\r",
+                          "const soLuongPinToiDa_expect = pm.variables.get(\"datasoLuongPinToiDa_createflow\")\r",
+                          "const soDT_expect = pm.variables.get(\"random_soDT\")\r",
+                          "const trangThai_expect = pm.variables.get(\"datatrangThai_createflow\")\r",
+                          "\r",
+                          "pm.test(\"tenTram is correct\", function () {\r",
+                          "    pm.expect(tenTram_reponse).to.eql(tenTram_expect)\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"diaChi is correct\", function () {\r",
+                          "    pm.expect(diaChi_reponse).to.eql(diaChi_expect)\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"kinhDo is correct\", function () {\r",
+                          "    pm.expect(kinhDo_reponse).to.eql(kinhDo_expect)\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"viDo is correct\", function () {\r",
+                          "    pm.expect(viDo_reponse).to.eql(viDo_expect)\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"soLuongPinToiDa is correct\", function () {\r",
+                          "    pm.expect(soLuongPinToiDa_reponse).to.eql(soLuongPinToiDa_expect)\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"soDT is correct\", function () {\r",
+                          "    pm.expect(soDT_reponse).to.eql(soDT_expect)\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"trangThai is correct\", function () {\r",
+                          "    pm.expect(trangThai_reponse).to.eql(trangThai_expect)\r",
+                          "});\r",
+                          "\r",
+                          "const ma = getReponse.maTram\r",
+                          "console.log(ma)\r",
+                          "pm.environment.set(\"maTram_updateflow\", ma); // tạo biến để sử dụng toàn cục collection\r",
+                          "pm.environment.set(\"tenTramDuplicateUpdate_reponse\", tenTram_reponse);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [""],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"{{datadiaChi_createflow}}\",\r\n  \"kinhDo\": {{datakinhDo_createflow}},\r\n  \"viDo\": {{dataviDo_createflow}},\r\n  \"soLuongPinToiDa\": {{datasoLuongPinToiDa_createflow}},\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"{{datatrangThai_createflow}}\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram",
+                      "host": ["{{url}}"],
+                      "path": ["station-service", "tram"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update A Station - Not Found",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [""],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try {\r",
+                          "    responseData = pm.response.json();\r",
+                          "} catch (e) {\r",
+                          "    responseData = null;\r",
+                          "}\r",
+                          "\r",
+                          "// 1. Kiểm tra HTTP Status Code & Content-Type\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "// 2. Validate cấu trúc JSON Schema lỗi chuẩn\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [không tìm thấy trạm]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('không tìm thấy trạm');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Đường dẫn API (path) phản hồi chính xác\", function () {\r",
+                          "        pm.expect(responseData.path).to.include('/api/station-service/tram');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"759/11 Hương Lộ 2\",\r\n  \"kinhDo\": 106.754321,\r\n  \"viDo\": 10.812345,\r\n  \"soLuongPinToiDa\": 10,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Hoạt động\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/999999999",
+                      "host": ["{{url}}"],
+                      "path": ["station-service", "tram", "999999999"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update A Station - Empty Body",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try {\r",
+                          "    responseData = pm.response.json();\r",
+                          "} catch (e) {\r",
+                          "    responseData = null;\r",
+                          "}\r",
+                          "\r",
+                          "// 1. Kiểm tra HTTP Status Code & Content-Type\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "// 2. Validate cấu trúc JSON Schema lỗi chuẩn\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [dữ liệu đầu vào không hợp lệ]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('dữ liệu đầu vào không hợp lệ');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Đường dẫn API (path) phản hồi chính xác\", function () {\r",
+                          "        pm.expect(responseData.path).to.include('/api/station-service/tram');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Empty Name",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try {\r",
+                          "    responseData = pm.response.json();\r",
+                          "} catch (e) {\r",
+                          "    responseData = null;\r",
+                          "}\r",
+                          "\r",
+                          "// 1. Kiểm tra HTTP Status Code & Content-Type\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "// 2. Validate cấu trúc JSON Schema lỗi chuẩn\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    // 3. Kiểm tra nội dung message & đường dẫn path cụ thể\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [tên trạm rỗng]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('tên trạm rỗng');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Đường dẫn API (path) phản hồi chính xác\", function () {\r",
+                          "        pm.expect(responseData.path).to.include('/api/station-service/tram');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"\",\r\n  \"diaChi\": \"456 Nguyễn Thị Minh Khai, Quận 3, TP.HCM\",\r\n  \"kinhDo\": 106.693245,\r\n  \"viDo\": 10.771234,\r\n  \"soLuongPinToiDa\": 15,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Hoạt động\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Duplicate Name Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try {\r",
+                          "    responseData = pm.response.json();\r",
+                          "} catch (e) {\r",
+                          "    responseData = null;\r",
+                          "}\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    // Thay đổi câu validate nội dung lỗi sang 'tên trạm trùng'\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [tên trạm trùng]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('tên trạm trùng');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Đường dẫn API (path) phản hồi chính xác\", function () {\r",
+                          "        pm.expect(responseData.path).to.include('/api/station-service/tram');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{tenTramDuplicateUpdate_reponse}}\",\r\n  \"diaChi\": \"456 Nguyễn Thị Minh Khai, Quận 3, TP.HCM\",\r\n  \"kinhDo\": 106.693245,\r\n  \"viDo\": 10.771234,\r\n  \"soLuongPinToiDa\": 15,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Hoạt động\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Name Too Long Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try {\r",
+                          "    responseData = pm.response.json();\r",
+                          "} catch (e) {\r",
+                          "    responseData = null;\r",
+                          "}\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    // Thay đổi câu validate nội dung lỗi sang 'tên trạm lố 150 kí tự'\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [tên trạm lố 150 kí tự]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('tên trạm lố 150 kí tự');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Đường dẫn API (path) phản hồi chính xác\", function () {\r",
+                          "        pm.expect(responseData.path).to.include('/api/station-service/tram');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}} Siêu Cấp Siêu Nhanh Dự Phòng Cho Toàn Bộ Các Loại Xe Máy Điện Và Ô Tô Điện Lưu Thông Trên Địa Bàn Khu Vực Thành Phố Hồ Chí Minh Thuộc Hệ Thống Cắm Sạc Pin Thông Minh Toàn Quốc\",\r\n  \"diaChi\": \"789 Điện Biên Phủ, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.712345,\r\n  \"viDo\": 10.804567,\r\n  \"soLuongPinToiDa\": 50,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Hoạt động\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Empty Address Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try {\r",
+                          "    responseData = pm.response.json();\r",
+                          "} catch (e) {\r",
+                          "    responseData = null;\r",
+                          "}\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    // Thay đổi câu validate nội dung lỗi sang 'địa chỉ rỗng'\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [địa chỉ rỗng]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('địa chỉ rỗng');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Đường dẫn API (path) phản hồi chính xác\", function () {\r",
+                          "        pm.expect(responseData.path).to.include('/api/station-service/tram');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"\",\r\n  \"kinhDo\": 106.754321,\r\n  \"viDo\": 10.812345,\r\n  \"soLuongPinToiDa\": 10,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Hoạt động\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Address Too Long Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try {\r",
+                          "    responseData = pm.response.json();\r",
+                          "} catch (e) {\r",
+                          "    responseData = null;\r",
+                          "}\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    // Thay đổi câu validate nội dung lỗi sang 'địa chỉ lố 250 kí tự'\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [địa chỉ lố 250 kí tự]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('địa chỉ lố 250 kí tự');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Đường dẫn API (path) phản hồi chính xác\", function () {\r",
+                          "        pm.expect(responseData.path).to.include('/api/station-service/tram');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"759/11 Hương Lộ 2  Quận 2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222 22222222222222222222222222222\",\r\n  \"kinhDo\": 106.754321,\r\n  \"viDo\": 10.812345,\r\n  \"soLuongPinToiDa\": 10,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Hoạt động\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Latitude Invalid Type Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [kinh độ sai kiểu dữ liệu]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('kinh độ sai kiểu dữ liệu');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": \"abc\",\r\n  \"viDo\": 10.801649,\r\n  \"soLuongPinToiDa\": 30,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Longitude Invalid Type Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [vĩ độ sai kiểu dữ liệu]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('vĩ độ sai kiểu dữ liệu');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.711834,\r\n  \"viDo\": \"xyz\",\r\n  \"soLuongPinToiDa\": 30,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Longitude Empty Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [vĩ độ bị rỗng]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('vĩ độ bị rỗng');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.711834,\r\n  \"viDo\": null,\r\n  \"soLuongPinToiDa\": 30,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Latitude Empty Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [kinh độ bị rỗng]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('kinh độ bị rỗng');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": null,\r\n  \"viDo\": 10.801649,\r\n  \"soLuongPinToiDa\": 30,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Latitude Out of Bounds Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [kinh độ vượt biên (>180)]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('kinh độ vượt biên (>180)');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 185.5,\r\n  \"viDo\": 10.801649,\r\n  \"soLuongPinToiDa\": 30,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Longitude Out of Bounds Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [vĩ độ vượt biên (>90)]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('vĩ độ vượt biên (>90)');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.711834,\r\n  \"viDo\": 95.5,\r\n  \"soLuongPinToiDa\": 30,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Battery Empty Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [pin rỗng]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('pin rỗng');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.711834,\r\n  \"viDo\": 10.801649,\r\n  \"soLuongPinToiDa\": null,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Battery Negative Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [pin âm]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('pin âm');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.711834,\r\n  \"viDo\": 10.801649,\r\n  \"soLuongPinToiDa\": -5,\r\n  \"soDT\": \"{{random_soDT}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Empty Phone Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [số điện thoại rỗng]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('số điện thoại rỗng');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.711834,\r\n  \"viDo\": 10.801649,\r\n  \"soLuongPinToiDa\": 5,\r\n  \"soDT\": \"\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Phone < 10 Character Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [số điện thoại nhỏ hơn 10 số]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('số điện thoại nhỏ hơn 10 số');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.711834,\r\n  \"viDo\": 10.801649,\r\n  \"soLuongPinToiDa\": 5,\r\n  \"soDT\": \"{{random_soDT<10}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Phone > 11 Character Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [số điện thoại lớn hơn 10 số]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('số điện thoại lớn hơn 11 số');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n  \"tenTram\": \"{{random_tenTram}}\",\r\n  \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n  \"kinhDo\": 106.711834,\r\n  \"viDo\": 10.801649,\r\n  \"soLuongPinToiDa\": 5,\r\n  \"soDT\": \"{{random_soDT>10}}\",\r\n  \"trangThai\": \"Bảo trì\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Phone Invalid Type Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [số điện thoại sai kiểu dữ liệu]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('số điện thoại sai kiểu dữ liệu');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"tenTram\": \"{{random_tenTram}}\",\r\n    \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n    \"kinhDo\": 106.711834,\r\n    \"viDo\": 10.801649,\r\n    \"soLuongPinToiDa\": 5,\r\n    \"soDT\": \"{{random_soDTInvalid}}\",\r\n    \"trangThai\": \"Bảo trì\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update Station - Status Empty Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let responseData;\r",
+                          "try { responseData = pm.response.json(); } catch (e) { responseData = null; }\r",
+                          "\r",
+                          "pm.test(\"Status code bắt buộc phải là 400 Bad Request\", function () {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Phản hồi trả về phải là định dạng JSON\", function () {\r",
+                          "    pm.response.to.have.header(\"Content-Type\");\r",
+                          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+                          "    pm.expect(responseData).to.not.be.null;\r",
+                          "});\r",
+                          "\r",
+                          "if (responseData) {\r",
+                          "    pm.test(\"Cấu trúc JSON lỗi chứa đầy đủ các trường bắt buộc\", function () {\r",
+                          "        pm.expect(responseData).to.have.property('timestamp').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('status').that.equals(400);\r",
+                          "        pm.expect(responseData).to.have.property('error').that.equals(\"Bad Request\");\r",
+                          "        pm.expect(responseData).to.have.property('message').that.is.a('string');\r",
+                          "        pm.expect(responseData).to.have.property('path').that.is.a('string');\r",
+                          "    });\r",
+                          "\r",
+                          "    pm.test(\"Nội dung thông điệp lỗi trùng khớp kịch bản [trạng thái rỗng]\", function () {\r",
+                          "        pm.expect(responseData.message.toLowerCase()).to.include('trạng thái rỗng');\r",
+                          "    });\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{access_token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"tenTram\": \"{{random_tenTram}}\",\r\n    \"diaChi\": \"123 Điện Biên Phủ, Phường 25, Quận Bình Thạnh, TP.HCM\",\r\n    \"kinhDo\": 106.711834,\r\n    \"viDo\": 10.801649,\r\n    \"soLuongPinToiDa\": 5,\r\n    \"soDT\": \"{{random_soDT}}\",\r\n    \"trangThai\": \"\"\r\n}"
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      "// Tạo một số ngẫu nhiên từ 1000 đến 9999\r",
+                      "const randomId = Math.floor(Math.random() * 9000) + 1000;\r",
+                      "\r",
+                      "// Đặt biến môi trường tạm thời cho lượt chạy này\r",
+                      "pm.environment.set(\"random_tenTram\", \"Trạm Sạc Số \" + randomId);\r",
+                      "pm.environment.set(\"random_soDT\", \"091\" + randomId + \"567\");"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [""]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Validation Delete Station",
+              "item": [
+                {
+                  "name": "Delete Station - Not Found",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 404 - Không tìm thấy trạm\", function () {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/00099999",
+                      "host": ["{{url}}"],
+                      "path": ["station-service", "tram", "00099999"]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Station For Update Validation - Success",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 200 - Xóa trạm thành công\", function () {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Tin nhắn phản hồi chính xác\", function () {\r",
+                          "    pm.expect(pm.response.text()).to.eql(\"Xóa trạm thành công!\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete Station Again - Not Found",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 404 - Không tìm thấy trạm\", function () {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{url}}/station-service/tram/{{maTram_updateflow}}",
+                      "host": ["{{url}}"],
+                      "path": [
+                        "station-service",
+                        "tram",
+                        "{{maTram_updateflow}}"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             }
@@ -4574,7 +8219,8 @@
                       "pm.environment.set(\"dataNgayGiaoDichUpdated_transactionflow\", \"2026-05-22T22:00:00\");\r",
                       "pm.environment.set(\"dataTrangThaiGiaoDichUpdated_transactionflow\", \"Đã hoàn thành\");\r",
                       "pm.environment.set(\"dataThanhtienUpdated_transactionflow\", 250000);\r",
-                      "pm.environment.set(\"dataPhuongThucThanhToanUpdated_transactionflow\", \"CASH\");\r"
+                      "pm.environment.set(\"dataPhuongThucThanhToanUpdated_transactionflow\", \"CASH\");\r",
+                      ""
                     ],
                     "type": "text/javascript",
                     "packages": {},
@@ -11300,6 +14946,82 @@
     },
     {
       "key": "dataVehicle_bienSo_created",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_hoTen_createflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_email_createflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_soDienThoai_createflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_gioiTinh_createflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_matKhau_createflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_ngaySinh_createflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_bangCap_createflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_kinhNghiem_createflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_maTram_createflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_hoTen_updateflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_email_updateflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_soDienThoai_updateflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_gioiTinh_updateflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_matKhau_updateflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_ngaySinh_updateflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_bangCap_updateflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_kinhNghiem_updateflow",
+      "value": ""
+    },
+    {
+      "key": "dataEmployee_maTram_updateflow",
+      "value": ""
+    },
+    {
+      "key": "maNhanVien",
       "value": ""
     },
     {
