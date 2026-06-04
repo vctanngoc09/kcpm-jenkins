@@ -3559,115 +3559,120 @@
           "name": "validation driver",
           "item": [
             {
-              "name": "Get Employee By Id - Not Found",
-              "event": [
+              "name": "Validation Employee Not Found",
+              "item": [
                 {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Status code is 404\", function () {\r",
-                      "    pm.response.to.have.status(404);\r",
-                      "});\r",
-                      "\r",
-                      "pm.test(\"Thông báo không tìm thấy nhân viên\", function () {\r",
-                      "    pm.expect(pm.response.text())\r",
-                      "        .to.eql(\"Không tìm thấy nhân viên\");\r",
-                      "});"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {},
-                    "requests": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{url}}/user-service/nhanvien/999999",
-                  "host": ["{{url}}"],
-                  "path": ["user-service", "nhanvien", "999999"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Update Employee - Not Found",
-              "event": [
+                  "name": "Get Employee By Id - Not Found",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 404\", function () {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Thông báo không tìm thấy nhân viên\", function () {\r",
+                          "    pm.expect(pm.response.text())\r",
+                          "        .to.eql(\"Không tìm thấy nhân viên\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{url}}/user-service/nhanvien/999999",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "nhanvien", "999999"]
+                    }
+                  },
+                  "response": []
+                },
                 {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Status code is 404\", function () {\r",
-                      "    pm.response.to.have.status(404);\r",
-                      "});\r",
-                      "\r",
-                      "pm.test(\"Error message is correct\", function () {\r",
-                      "    pm.expect(pm.response.text())\r",
-                      "        .to.include(\"Không tìm thấy nhân viên\");\r",
-                      "});"
+                  "name": "Update Employee - Not Found",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 404\", function () {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Error message is correct\", function () {\r",
+                          "    pm.expect(pm.response.text())\r",
+                          "        .to.include(\"Không tìm thấy nhân viên\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
                     ],
-                    "type": "text/javascript",
-                    "packages": {},
-                    "requests": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "url": {
-                  "raw": "{{url}}/user-service/nhanvien/999999",
-                  "host": ["{{url}}"],
-                  "path": ["user-service", "nhanvien", "999999"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Delete Employee - Not Found",
-              "event": [
+                    "url": {
+                      "raw": "{{url}}/user-service/nhanvien/999999",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "nhanvien", "999999"]
+                    }
+                  },
+                  "response": []
+                },
                 {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Status code is 404\", function () {\r",
-                      "    pm.response.to.have.status(404);\r",
-                      "});\r",
-                      "\r",
-                      "pm.test(\"Error message is correct\", function () {\r",
-                      "    pm.expect(pm.response.text())\r",
-                      "        .to.eql(\"Không tìm thấy nhân viên\");\r",
-                      "});"
+                  "name": "Delete Employee - Not Found",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 404\", function () {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Error message is correct\", function () {\r",
+                          "    pm.expect(pm.response.text())\r",
+                          "        .to.eql(\"Không tìm thấy nhân viên\");\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                      }
                     ],
-                    "type": "text/javascript",
-                    "packages": {},
-                    "requests": {}
-                  }
+                    "url": {
+                      "raw": "{{url}}/user-service/nhanvien/999999",
+                      "host": ["{{url}}"],
+                      "path": ["user-service", "nhanvien", "999999"]
+                    }
+                  },
+                  "response": []
                 }
-              ],
-              "request": {
-                "method": "DELETE",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "url": {
-                  "raw": "{{url}}/user-service/nhanvien/999999",
-                  "host": ["{{url}}"],
-                  "path": ["user-service", "nhanvien", "999999"]
-                }
-              },
-              "response": []
+              ]
             }
           ]
         }
@@ -15025,75 +15030,11 @@
       "value": ""
     },
     {
-      "key": "dataloaiXe_createflow",
+      "key": "employeeId_createflow",
       "value": ""
     },
     {
-      "key": "datamaTaiXe_createflow",
-      "value": ""
-    },
-    {
-      "key": "random_vin_update",
-      "value": ""
-    },
-    {
-      "key": "random_bienSo_update",
-      "value": ""
-    },
-    {
-      "key": "dataloaiXe_updateflow",
-      "value": ""
-    },
-    {
-      "key": "maPhuongTien",
-      "value": ""
-    },
-    {
-      "key": "createdVehicleVin",
-      "value": ""
-    },
-    {
-      "key": "createdVehicleBienSo",
-      "value": ""
-    },
-    {
-      "key": "createdVehicleLoaiXe",
-      "value": ""
-    },
-    {
-      "key": "createdVehicleMaTaiXe",
-      "value": ""
-    },
-    {
-      "key": "dataVehicle_vin_updated",
-      "value": ""
-    },
-    {
-      "key": "dataVehicle_bienSo_updated",
-      "value": ""
-    },
-    {
-      "key": "dataVehicle_loaiXe_updated",
-      "value": ""
-    },
-    {
-      "key": "dataVehicle_vin_createflow_2",
-      "value": ""
-    },
-    {
-      "key": "dataVehicle_bienSo_createflow_2",
-      "value": ""
-    },
-    {
-      "key": "dataVehicle_loaiXe_createflow_2",
-      "value": ""
-    },
-    {
-      "key": "dataVehicle_maTaiXe_createflow_2",
-      "value": ""
-    },
-    {
-      "key": "dataVehicle_maPin_createflow_2",
+      "key": "employeeUserId_createflow",
       "value": ""
     }
   ]
