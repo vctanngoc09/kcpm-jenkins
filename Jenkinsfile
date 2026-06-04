@@ -21,7 +21,7 @@ pipeline {
     
     // THÊM ĐOẠN NÀY ĐỂ HẸN LỊCH CHẠY TỰ ĐỘNG
     triggers {
-        cron('10 5 * * 2')
+        cron('30 3 * * *')
         pollSCM('H/2 * * * *')
     }
     

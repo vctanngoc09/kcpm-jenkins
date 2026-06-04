@@ -298,7 +298,7 @@ async function createBugIssue(
   const serviceLabel = safeLabel(serviceName);
   const flowLabel = safeLabel(failure.flowName);
   const summary =
-    `[Bug] Lỗi Request: ${failure.requestName} - ${failure.testName}`.substring(
+    `[Bug] Failed Request: ${failure.requestName} - ${failure.testName}`.substring(
       0,
       200,
     );
@@ -413,7 +413,7 @@ async function startSyncBugsToJira() {
             });
             await addRetestComment(
               existingBug.key,
-              `Retest: vẫn thất bại vào lúc - ${timeString}`,
+              `Retest: still failed - ${timeString}`,
             );
             continue;
           }
